@@ -10,7 +10,7 @@ description: "XSS cheatsheet"
 tags: ["web", "penetest", "xss"]
 categories: ["Penetest - Web"]
 
-hiddenFromHomePage: false
+hiddenFromHomePage: true
 hiddenFromSearch: false
 twemoji: false
 lightgallery: false

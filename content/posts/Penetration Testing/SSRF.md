@@ -10,7 +10,7 @@ description: "SSRF cheatsheet"
 tags: ["web", "penetest", "ssrf"]
 categories: ["Penetest - Web"]
 
-hiddenFromHomePage: false
+hiddenFromHomePage: true
 hiddenFromSearch: false
 twemoji: false
 lightgallery: false

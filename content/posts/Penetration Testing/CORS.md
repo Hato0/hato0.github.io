@@ -10,7 +10,7 @@ description: "CORS cheatsheet"
 tags: ["web", "penetest", "cors"]
 categories: ["Penetest - Web"]
 
-hiddenFromHomePage: false
+hiddenFromHomePage: true
 hiddenFromSearch: false
 twemoji: false
 lightgallery: false

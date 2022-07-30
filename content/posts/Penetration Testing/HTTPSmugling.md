@@ -10,7 +10,7 @@ description: "SQL injection cheatsheet"
 tags: ["web", "penetest", "HTTPRS"]
 categories: ["Penetest - Web"]
 
-hiddenFromHomePage: false
+hiddenFromHomePage: true
 hiddenFromSearch: false
 twemoji: false
 lightgallery: false

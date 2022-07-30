@@ -10,7 +10,7 @@ description: "XXE cheatsheet"
 tags: ["web", "penetest", "xxe"]
 categories: ["Penetest - Web"]
 
-hiddenFromHomePage: false
+hiddenFromHomePage: true
 hiddenFromSearch: false
 twemoji: false
 lightgallery: false

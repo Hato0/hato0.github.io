@@ -10,7 +10,7 @@ description: "Clickjacking cheatsheet"
 tags: ["web", "penetest", "clickjacking", "phishing"]
 categories: ["Penetest - Web"]
 
-hiddenFromHomePage: false
+hiddenFromHomePage: true
 hiddenFromSearch: false
 twemoji: false
 lightgallery: false

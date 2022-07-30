@@ -10,7 +10,7 @@ description: "DOM-based vulnerabilities cheatsheet"
 tags: ["web", "penetest", "dom-based"]
 categories: ["Penetest - Web"]
 
-hiddenFromHomePage: false
+hiddenFromHomePage: true
 hiddenFromSearch: false
 twemoji: false
 lightgallery: false
