@@ -145,7 +145,7 @@ The script fetch JA3/S signatures known as malicious and active domain extracted
 
 Below the architecture of the solution. Find also a working example.
 
-![C2Hunter Architecture](http://localhost:1313/lib/images/C2Hunter.png)
+![C2Hunter Architecture](https://www.hato0.xyz/C2Hunter.png)
 
 #### Interfacing it with SOC tooling
 
