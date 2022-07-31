@@ -1,4 +1,4 @@
-baseurl      = "localhost"
+baseurl      = "/"
 title        = "Hato0 - Blog"
 languageCode = "en-us"
 theme        = "LoveIt"
@@ -335,7 +335,7 @@ paginate     = 10
       Mix = false
     # Comment config
     [params.page.comment]
-      enable = false
+      enable = true
       # Disqus comment config (https://disqus.com/)
       [params.page.comment.disqus]
         enable = false
