@@ -1,7 +1,87 @@
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-        <title>Tags - Tag - My New Hugo Site</title>
-        <link>http://example.org/tags/</link>
-        <description>Tags - Tag - My New Hugo Site</description>
-        <generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="http://example.org/tags/" rel="self" type="application/rss+xml" /></channel>
+        <title>Tags - Tag - Hato0 - Blog</title>
+        <link>/tags/</link>
+        <description>Tags - Tag - Hato0 - Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="/tags/" rel="self" type="application/rss+xml" /><item>
+    <title>blueteam</title>
+    <link>/tags/blueteam/</link>
+    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>/tags/blueteam/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>clickjacking</title>
+    <link>/tags/clickjacking/</link>
+    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>/tags/clickjacking/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>cors</title>
+    <link>/tags/cors/</link>
+    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>/tags/cors/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>csrf</title>
+    <link>/tags/csrf/</link>
+    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>/tags/csrf/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>detection</title>
+    <link>/tags/detection/</link>
+    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>/tags/detection/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>development</title>
+    <link>/tags/development/</link>
+    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>/tags/development/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>dom-based</title>
+    <link>/tags/dom-based/</link>
+    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>/tags/dom-based/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>HTTPRS</title>
+    <link>/tags/httprs/</link>
+    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>/tags/httprs/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>penetest</title>
+    <link>/tags/penetest/</link>
+    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>/tags/penetest/</guid>
+    <description><![CDATA[]]></description>
+</item>
+<item>
+    <title>phishing</title>
+    <link>/tags/phishing/</link>
+    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+    <author>Author</author>
+    <guid>/tags/phishing/</guid>
+    <description><![CDATA[]]></description>
+</item>
+</channel>
 </rss>

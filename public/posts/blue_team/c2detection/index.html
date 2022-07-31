@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>C2 detection using fingerprinting - Hato0 - Blog</title><meta name="Description" content="Behavioral and fingerprint analysis to hunt for uncovered C2 over HTTP"><meta property="og:title" content="C2 detection using fingerprinting" />
+<meta property="og:description" content="Behavioral and fingerprint analysis to hunt for uncovered C2 over HTTP" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/blue_team/c2detection/" /><meta property="article:section" content="posts" />
+
+<meta property="article:modified_time" content="2022-07-31T02:11:25+02:00" /><meta property="og:site_name" content="Hato0 - Blog" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="C2 detection using fingerprinting"/>
+<meta name="twitter:description" content="Behavioral and fingerprint analysis to hunt for uncovered C2 over HTTP"/>
+<meta name="application-name" content="Hato0&#39;s journey">
+<meta name="apple-mobile-web-app-title" content="Hato0&#39;s journey"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="https://www.hato0.xyz/favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="/posts/blue_team/c2detection/" /><link rel="prev" href="/posts/penetration_testing/clickjacking/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "C2 detection using fingerprinting",
+        "inLanguage": "en-us",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "\/posts\/blue_team\/c2detection\/"
+        },"genre": "posts","keywords": "web, blueteam, detection, development","wordcount":  1658 ,
+        "url": "\/posts\/blue_team\/c2detection\/","dateModified": "2022-07-31T02:11:25+02:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "Hato0"
+            },"description": "Behavioral and fingerprint analysis to hunt for uncovered C2 over HTTP"
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Hato0 - Blog"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="https://www.hato0.xyz/favicon.png"
+        data-srcset="https://www.hato0.xyz/favicon.png, https://www.hato0.xyz/favicon.png 1.5x, https://www.hato0.xyz/favicon.png 2x"
+        data-sizes="auto"
+        alt="https://www.hato0.xyz/favicon.png"
+        title="https://www.hato0.xyz/favicon.png" /></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/"> About </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Hato0 - Blog"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="https://www.hato0.xyz/favicon.png"
+        data-srcset="https://www.hato0.xyz/favicon.png, https://www.hato0.xyz/favicon.png 1.5x, https://www.hato0.xyz/favicon.png 2x"
+        data-sizes="auto"
+        alt="https://www.hato0.xyz/favicon.png"
+        title="https://www.hato0.xyz/favicon.png" /></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/" title="">About</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">C2 detection using fingerprinting</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Hato0</a></span>&nbsp;<span class="post-category">included in <a href="/categories/blueteam-detection/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>BlueTeam - Detection</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="0001-01-01">0001-01-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;1658 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;8 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#summary">Summary</a></li>
+    <li><a href="#c2-infrastructure">C2 infrastructure</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#possible-detections">Possible detections</a></li>
+    <li><a href="#implemented-solution">Implemented solution</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#conclusion">Conclusion</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h2 id="summary">Summary</h2>
+<p>Adversaries leverage their access to assets using initial access tool (custom or not). These tools are mainly used to get a remote session of the asset.</p>
+<p>This remote access is known as Command and Control (C2) and can be implemented through many protocols and many technics. This channel will allow adversaries to perform lateral movement, internal discovery, exfiltration and much more.</p>
+<p>Willing to hunt for C2 in companies and homemade networks, I&rsquo;ve focused my effort into C2 over HTTP.</p>
+<h2 id="c2-infrastructure">C2 infrastructure</h2>
+<p>C2 needs a dedicated infrastructure to work. This infrastructure must be <strong>scalable</strong> as adversaries will not only compromise about ten assets but thousands worldwide.</p>
+<p>Three models are widely implemented :</p>
+<h4 id="centralized">Centralized</h4>
+<p>Centralized model work like traditional client-server Web Apps.</p>
+<p>The client located on the compromised asset will contact the C2 server and check if any instructions as been set for him.
+This model involved the creation of a company like network with load balancer, defense measures (not to detect adversaries but threat researchers). They often hide themselves behind CDNs or legitimate website (compromised upstream) to mask their activities.</p>
+<p>As C2 are discovered due to incident response process, adversaries must plan for a backup solution and find innovative way to escape the full discovery.</p>
+<p>These plan might include :</p>
+<ul>
+<li>Use of legitimate companies solution</li>
+<li>Use social networks to gather C2 information</li>
+<li>Use steganography to obfuscate the data</li>
+<li>&hellip;</li>
+</ul>
+<h4 id="peer-to-peer-p2p">Peer-to-Peer (P2P)</h4>
+<p>Peer-to-Peer model is used to deliver instruction as a botnet would do it. Every compromise host knows his neighbors and relay messages to each other.</p>
+<p>This model is harder to take down, as taking down the responsible adversary will not stop the infection of these thousands of devices linked in P2P. 
+This is mainly used as fallback channel in case of main C2 server takedown.</p>
+<h4 id="out-of-band-and-random">Out of Band and Random</h4>
+<p>A lot of unusual techniques have been observed to send instructions to compromised assets.</p>
+<p>Communication website like Slack, Teams, Messenger and others have been used to send instructions undetected as communications are as clean as legit ones.</p>
+<p>A lot of other technics are not known and still to be uncovered by researchers.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://cyberhoot.com/wp-content/uploads/2020/02/security-botnet_architecture-1024x540.jpg"
+        data-srcset="https://cyberhoot.com/wp-content/uploads/2020/02/security-botnet_architecture-1024x540.jpg, https://cyberhoot.com/wp-content/uploads/2020/02/security-botnet_architecture-1024x540.jpg 1.5x, https://cyberhoot.com/wp-content/uploads/2020/02/security-botnet_architecture-1024x540.jpg 2x"
+        data-sizes="auto"
+        alt="https://cyberhoot.com/wp-content/uploads/2020/02/security-botnet_architecture-1024x540.jpg"
+        title="C2 Infra schema" /></p>
+<h2 id="possible-detections">Possible detections</h2>
+<p>Many detections possibilities are used but a lot of them are not as efficient as it could be.</p>
+<p>Many analyst and companies rely on two factors:</p>
+<ul>
+<li>IOCs</li>
+<li>Providers</li>
+</ul>
+<p>These two options present a lot of inconvenient:</p>
+<ul>
+<li>IOCs are extracted from payloads or response teams investigations. They are very often outdated as adversaries infrastructures rotate very often, and they are also not exhaustive as unused channels are not investigated by most response teams. 
+Keep in mind that if we can share IOC between SOC/CSIRT (or whatever name you give your analyst team), adversaries also know which endpoint / sample has leak and case easily replace/change it.</li>
+<li>Security providers don&rsquo;t priories your security, they have to sell products to exist. They take choices based on marketing plan and not based on security impact. Of course, this is not a generality, but take this into account and double check features with your own tests to make sure they really perform what they are meant to.</li>
+</ul>
+<p>Additionally, you can study and implement detection on loader and on stage2. This is time-consuming but can be useful. Keep in mind that you need to stay updated on loader if you choose this detection path.</p>
+<h2 id="implemented-solution">Implemented solution</h2>
+<p>As IOCs and providers product are not my go to (even if I use them). I&rsquo;ve decided to build my own detection based on multiple factor to detect communication with adversaries infrastructure over HTTP.</p>
+<div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>Note<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted -->
+This solution can either be implemented by yourself or you can use the developed tool located <a href="https://github.com/Hato0/C2Hunter" target="_blank" rel="noopener noreffer ">here</a></div>
+        </div>
+    </div>
+<p>This detection use three aspects :</p>
+<ul>
+<li>Proxy logs with enrich data</li>
+<li>Fingerprinting</li>
+<li>Open source data</li>
+</ul>
+<p>We will combine these three aspects to create a detection that proxy provider should be implemented.</p>
+<h4 id="overview">Overview</h4>
+<p>We know that adversaries must have a scalable architecture, which mean that automatic deployment must be used.
+With that type of deployment, parts of the deployed infra will not be changed (deployment methods, installed libraries, server and version used, &hellip;).</p>
+<p>These unchanged elements, can be tracked by their fingerprint.</p>
+<p>This solution is based on JARM and JA3/JA3S fingerprinting algorithms (TLS fingerprint). 
+Quick details on these fingerprinting algorithms:</p>
+<ul>
+<li><strong>JARM</strong>: The JARM fingerprint hash is a hybrid fuzzy hash, it uses the combination of a reversible and non-reversible hash algorithm to produce a 62 character fingerprint. The first 30 characters are made up of the cipher and TLS version chosen by the server for each of the 10 client hello&rsquo;s sent. A &ldquo;000&rdquo; denotes that the server refused to negotiate with that client hello. The remaining 32 characters are a truncated SHA256 hash of the cumulative extensions sent by the server, ignoring x509 certificate data. This method is an active one. More details <a href="https://github.com/salesforce/jarm" target="_blank" rel="noopener noreffer ">here</a>.</li>
+<li><strong>JA3</strong>: JA3 gathers the decimal values of the bytes for the following fields in the Client Hello packet; SSL Version, Accepted Ciphers, List of Extensions, Elliptic Curves, and Elliptic Curve Formats. It then concatenates those values together in order, using a &ldquo;,&rdquo; to delimit each field and a &ldquo;-&rdquo; to delimit each value in each field. This method is a passive one. More details <a href="https://github.com/salesforce/ja3" target="_blank" rel="noopener noreffer ">here</a>.</li>
+<li><strong>JA3S</strong>: JA3S is JA3 for the Server side of the SSL/TLS communication and fingerprints how servers respond to particular clients. This method is a passive one. More details <a href="https://github.com/salesforce/ja3" target="_blank" rel="noopener noreffer ">here</a>.</li>
+</ul>
+<h4 id="detailed-explanation">Detailed explanation</h4>
+<p>With this information in our hand, we can now describe the solution step by step:</p>
+<ul>
+<li>As this detection is based on fingerprint. We need to build a database of malicious signatures. I know, I&rsquo;ve said before that I don&rsquo;t like IOC but that&rsquo;s not a simple domain or IP, we are talking about a signature which is associated to a specific configuration and which is not related to domain nor IP.
+To create this database, I&rsquo;m using <code>abuse.ch</code> updated database. 
+The script fetch JA3/S signatures known as malicious and active domain extracted by security researchers with identified C2 tooling.</li>
+<li>The next step is to ingest these data in our database. JA3 and JA3S signatures are added to the database without any modification. For the JARM signatures, we need to scan each domain or IP and gather his signature. If you remember well the description above, adversaries also monitor their infrastructure to avoid these types of signatures to be done. To avoid any false data to be ingested, for each domain or IP we will perform the JARM scan three time and compare these three signatures. If they are identical, we ingest it to the database, if not we discard the domain/IP.</li>
+<li>Now that the database is built, we can focus on the detection system. That&rsquo;s where the proxy come in. Two actions will be done from these logs:
+<ul>
+<li><strong>Active monitoring</strong>: JA3 and JA3S are passive methods. These signatures are generated from PCAP data. Nothing more simple to do when we&rsquo;ve got a proxy on our end. Each time a request is done through the proxy, these signatures are generated and added to the DB (linked with the IP/Domain). A comparison is done with the malicious data we ingested earlier. If the JA3 <strong>AND</strong> the JA3S match, the connection is closed and the website is categorized as malicious (no more connection will be created for this destination).</li>
+<li><strong>Passive monitoring</strong>: As web navigation data in companies are really noisy, we first need to filter on a specific comportment. The typical C2 comportment is to fetch every X mins a static page to fetch for command to execute. 
+To target this comportment, here is an SQL example:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-SQL" data-lang="SQL"><span class="line"><span class="cl"><span class="k">SELECT</span><span class="w"> </span><span class="n">Id</span><span class="p">,</span><span class="w"> </span><span class="n">URL</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">proxyLogs</span><span class="w"> </span><span class="k">group</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">username</span><span class="w"> </span><span class="k">having</span><span class="w"> </span><span class="n">foHoursSeen</span><span class="o">&gt;=</span><span class="err">{</span><span class="n">criteria</span><span class="err">}</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c1">-- foHoursSeen: Number of consecutive hours where the domain/IP has been contacted
+</span></span></span><span class="line"><span class="cl"><span class="c1">-- criteria: should be a quite big amount to avoid overload (default=10)</span></span></span></code></pre></div>
+Then we will generate the JARM signature for each domain/IP identified. During the scan process (JARM generated 3 times to avoid false data), if signatures are rotating, the website will be marked as malicious. At the end of the scan every thing will be compared to the database created before and in case of a match, the domain/IP will be marked as malicious.</li>
+</ul>
+</li>
+</ul>
+<div class="details admonition note open">
+        <div class="details-summary admonition-title">
+            <i class="icon fas fa-pencil-alt fa-fw" aria-hidden="true"></i>Note<i class="details-icon fas fa-angle-right fa-fw" aria-hidden="true"></i>
+        </div>
+        <div class="details-content">
+            <div class="admonition-content"><p><!-- raw HTML omitted --><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>The database update is performed every day to stay as much as possible up to date.</li>
+<li>In my implementation, each criteria can be customized to fit your needs.</li>
+<li>During the database build and the passive monitoring phase, keep in mind that you will contact the adversaries infrastructures.</li>
+</ul>
+</div>
+        </div>
+    </div>
+<h4 id="solution-architecture">Solution architecture</h4>
+<p>Below the architecture of the solution. Find also a working example.</p>
+<p><img
+        class="lazyload"
+        src="/svg/loading.min.svg"
+        data-src="https://www.hato0.xyz/C2Hunter.png"
+        data-srcset="https://www.hato0.xyz/C2Hunter.png, https://www.hato0.xyz/C2Hunter.png 1.5x, https://www.hato0.xyz/C2Hunter.png 2x"
+        data-sizes="auto"
+        alt="https://www.hato0.xyz/C2Hunter.png"
+        title="C2Hunter Architecture" /></p>
+<h4 id="interfacing-it-with-soc-tooling">Interfacing it with SOC tooling</h4>
+<p>If you have a SOC, I assume that:</p>
+<ul>
+<li>You have a proxy</li>
+<li>Your proxy logs are centralized in a SIEM</li>
+<li>You have a tooling dedicated instance</li>
+</ul>
+<p>So basically nothing really crazy to adapt. The SQL statement to gather information from my proxy should be your SIEM request (should be performed on a 24h flowing time slot). 
+Then JARM signatures should be generated following the below model. Comparison will remain with the same mechanism.</p>
+<p>To build your DB, I recommend using an instance totally decorrelated from your company to avoid any targeting or detection bypass in case of targeting attack. You can also use your private threat intel in addition to <code>abuse.ch</code>.</p>
+<p>For the reporting, investigate the source of these connections in your SIEM/EDR and perform required remediation.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>As adversaries find new ways to implement their Command and Control, we need to find new ways to implement a durable solution. To do so, the implementation of solution needs to go higher and higher in the pyramid of pain model.</p>
+<p>This solution is almost on the top of this pyramid as it cover at least everything under &ldquo;Network and hosts artifacts&rdquo; and quite a bit of the &ldquo;Tools&rdquo; section.</p>
+<p>Keep in mind that you need to understand the overall solution to build a solution yourself or to use the one I&rsquo;ve created.</p>
+<p>If you have ideas to improve this detection, don&rsquo;t hesitate to contact me.</p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2022-07-31&nbsp;<a class="git-hash" href="https://github.com/Hato0/hato0.github.io/commit/029fb1a3c9d8cdaf487690475b1a521a24b270d3" target="_blank" title="commit by Hato0(contact@hato0.xyz) 029fb1a3c9d8cdaf487690475b1a521a24b270d3: Symlink fix">
+                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>029fb1a</a></span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="/posts/blue_team/c2detection/" data-title="C2 detection using fingerprinting" data-hashtags="web,blueteam,detection,development"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="/posts/blue_team/c2detection/" data-hashtag="web"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="/posts/blue_team/c2detection/" data-title="C2 detection using fingerprinting"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="/posts/blue_team/c2detection/" data-title="C2 detection using fingerprinting"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="/posts/blue_team/c2detection/" data-title="C2 detection using fingerprinting"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/web/">web</a>,&nbsp;<a href="/tags/blueteam/">blueteam</a>,&nbsp;<a href="/tags/detection/">detection</a>,&nbsp;<a href="/tags/development/">development</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav"><a href="/posts/penetration_testing/clickjacking/" class="prev" rel="prev" title="Clickjacking"><i class="fas fa-angle-left fa-fw" aria-hidden="true"></i>Clickjacking</a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">hato0 dedicated blog @2022</div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank"></a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>

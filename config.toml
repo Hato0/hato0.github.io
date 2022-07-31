@@ -4,6 +4,7 @@ languageCode = "en-us"
 theme        = "LoveIt"
 paginate     = 10
 
+enableGitInfo = true
 [outputs]
   home = ["HTML", "RSS", "JSON"]
 [module]
@@ -32,9 +33,9 @@ paginate     = 10
 [params]
   # site default theme ["auto", "light", "dark"]
   defaultTheme = "auto"
-  enableGitInfo = true
   # public git repo url only then enableGitInfo is true
   gitRepo = "https://github.com/Hato0/hato0.github.io"
+  gitBranch = "main"
   # which hash function used for SRI, when empty, no SRI is used
   # ["sha256", "sha384", "sha512", "md5"]
   # ["sha256", "sha384", "sha512", "md5"]

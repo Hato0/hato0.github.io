@@ -1,0 +1,16 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>csrf - Tag - Hato0 - Blog</title>
+        <link>/tags/csrf/</link>
+        <description>csrf - Tag - Hato0 - Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="/tags/csrf/" rel="self" type="application/rss+xml" /><item>
+    <title>CSRF attack</title>
+    <link>/posts/penetration_testing/csrf/</link>
+    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+    <author>Hato0</author>
+    <guid>/posts/penetration_testing/csrf/</guid>
+    <description><![CDATA[Cross-site request forgery Cross-site request forgery (also known as CSRF) is a web security vulnerability that allows an attacker to induce users to perform actions that they do not intend to perform. This attack can happend by phishing, clone site, etc &hellip; Conditions have to be present for this attack to be perform :
+A relevant action. : Change password, email, rights, &hellip; Cookie-based session handling. : Website with cookie base for sessions are an incredible candidate for this type of attack No unpredictable request parameters.]]></description>
+</item>
+</channel>
+</rss>

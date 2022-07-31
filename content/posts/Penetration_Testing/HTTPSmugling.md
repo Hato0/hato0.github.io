@@ -4,6 +4,7 @@ subtitle: ""
 draft: false
 author: "Hato0"
 description: "SQL injection cheatsheet"
+Last Update: <time datetime="{{ .Page.Lastmod.Format "Mon Jan 10 17:13:38 2020 -0700" }}" class="text-muted">  {{ $.Page.Lastmod.Format "January 02, 2006" }} </time>
 
 tags: ["web", "penetest", "HTTPRS"]
 categories: ["Penetest - Web"]

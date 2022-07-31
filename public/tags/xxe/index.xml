@@ -1,0 +1,17 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>xxe - Tag - Hato0 - Blog</title>
+        <link>/tags/xxe/</link>
+        <description>xxe - Tag - Hato0 - Blog</description>
+        <generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="/tags/xxe/" rel="self" type="application/rss+xml" /><item>
+    <title>XXE attack</title>
+    <link>/posts/penetration_testing/xxe/</link>
+    <pubDate>Mon, 01 Jan 0001 00:00:00 &#43;0000</pubDate>
+    <author>Hato0</author>
+    <guid>/posts/penetration_testing/xxe/</guid>
+    <description><![CDATA[XML external entity injection XXE is a specific attack against XML application. It can allow an attacker to view files, interact directly with the backend, or other application related to the corrupt one.
+This attack is perform as an initial vector for SSRF. To check for the vulnerability you will have to intercept the request and change the post data. Post data are used in 99.99% for XML applications.
+Basics External entities to retrieve files]]></description>
+</item>
+</channel>
+</rss>

