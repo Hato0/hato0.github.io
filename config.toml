@@ -34,7 +34,7 @@ paginate     = 10
   defaultTheme = "auto"
   enableGitInfo = true
   # public git repo url only then enableGitInfo is true
-  gitRepo = "https://github.com/Hato0/SecBlog"
+  gitRepo = "https://github.com/Hato0/hato0.github.io"
   # which hash function used for SRI, when empty, no SRI is used
   # ["sha256", "sha384", "sha512", "md5"]
   # ["sha256", "sha384", "sha512", "md5"]
