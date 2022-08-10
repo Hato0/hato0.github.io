@@ -2,6 +2,7 @@
 title: "C2 detection using fingerprinting"
 subtitle: ""
 draft: false
+author: "Hato0"
 description: "Behavioral and fingerprint analysis to hunt for uncovered C2 over HTTP"
 Last Update: <time datetime="{{ .Page.Lastmod.Format "Mon Jan 10 17:13:38 2020 -0700" }}" class="text-muted">  {{ $.Page.Lastmod.Format "January 02, 2006" }} </time>
 Date: 2022-07-31
@@ -27,7 +28,7 @@ code:
 share:
   enable: true
 comment:
-  enable: true
+  enable: false
 ---
 ## Summary
 
@@ -157,6 +158,8 @@ If you have a SOC, I assume that:
 
 So basically nothing really crazy to adapt. The SQL statement to gather information from my proxy should be your SIEM request (should be performed on a 24h flowing time slot). 
 Then JARM signatures should be generated following the below model. Comparison will remain with the same mechanism.
+
+For the JA3 part, it can be already done by your proxy/firewall provider (might want to check before implement it). If you are using Qradar and have your flow integrated, using QFlow is a valuable option. 
 
 To build your DB, I recommend using an instance totally decorrelated from your company to avoid any targeting or detection bypass in case of targeting attack. You can also use your private threat intel in addition to `abuse.ch`.
 

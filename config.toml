@@ -1,4 +1,4 @@
-baseurl      = "/"
+baseurl      = "https://www.hato0.xyz/"
 title        = "Hato0 - Blog"
 languageCode = "en-us"
 theme        = "LoveIt"
@@ -464,7 +464,7 @@ enableGitInfo = true
 
   # Analytics config
   [params.analytics]
-    enable = false
+    enable = true
     # Google Analytics
     [params.analytics.google]
       id = ""
@@ -484,7 +484,7 @@ enableGitInfo = true
 
   # Cookie consent config
   [params.cookieconsent]
-    enable = true
+    enable = false
     # text strings used for Cookie consent banner
     [params.cookieconsent.content]
       message = ""
