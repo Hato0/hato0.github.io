@@ -8,7 +8,7 @@ Last Update: <time datetime="{{ .Page.Lastmod.Format "Mon Jan 10 17:13:38 2020 -
 Date: 2022-07-31
 
 tags: ["web", "blueteam", "detection", "development"]
-categories: ["BlueTeam - Detection"]
+categories: ["BlueTeam - Detection", "BlueTeam - Tools"]
 
 hiddenFromHomePage: false
 hiddenFromSearch: false
